@@ -1002,3 +1002,67 @@ move("right")
 move("down")
 move("down")
 move("down")
+
+
+TIC TAC TOE NORMAL
+
+import random
+
+board = [" " for _ in range(9)]
+
+def print_board():
+    print()
+    for i in range(0, 9, 3):
+        print(board[i], "|", board[i+1], "|", board[i+2])
+        if i < 6:
+            print("--+---+--")
+    print()
+
+def check_winner(player):
+    wins = [
+        (0,1,2), (3,4,5), (6,7,8),  # rows
+        (0,3,6), (1,4,7), (2,5,8),  # cols
+        (0,4,8), (2,4,6)            # diagonals
+    ]
+    return any(board[a] == board[b] == board[c] == player for a,b,c in wins)
+
+def is_full():
+    return " " not in board
+
+def make_move(pos, player):
+    if board[pos] == " ":
+        board[pos] = player
+        return True
+    return False
+
+def random_ai_move():
+    empty = [i for i in range(9) if board[i] == " "]
+    return random.choice(empty)
+
+# Game loop
+current_player = "X"
+
+while True:
+    print_board()
+
+    if current_player == "X":
+        pos = int(input("Enter position (0-8): "))
+        if not make_move(pos, "X"):
+            print("Invalid move, try again")
+            continue
+    else:
+        pos = random_ai_move()
+        make_move(pos, "O")
+        print("Computer chose:", pos)
+
+    if check_winner(current_player):
+        print_board()
+        print(current_player, "wins!")
+        break
+
+    if is_full():
+        print_board()
+        print("Draw!")
+        break
+
+    current_player = "O" if current_player == "X" else "X"
